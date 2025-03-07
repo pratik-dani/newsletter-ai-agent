@@ -2,6 +2,11 @@
 
 An AI-powered Apify actor that generates well-structured newsletters using a crew of specialized AI agents. The system uses CrewAI to coordinate multiple agents that research, write, and edit newsletter content based on user input.
 
+## Demo
+
+## Mintlify Documentation
+[![Mintlify Docs](https://img.shields.io/badge/docs-mintlify-blue.svg)](https://newsletter-ai-agent.pratikdani.com/)
+
 ## Features
 
 - Multi-agent system using CrewAI
