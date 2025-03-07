@@ -22,6 +22,82 @@ This agent helps you stay informed about your areas of interest by:
 - **Customizable outputs**: Adjust the format and style of your newsletters
 - **Agent-based architecture**: Leverages CrewAI to coordinate specialized agents for research, writing, and editing
 
+## Codebase Architecture
+
+The Newsletter AI Agent is built as an Apify Actor with a multi-agent system powered by CrewAI. Below is a diagram of the codebase architecture:
+
+```mermaid
+graph TD
+    subgraph "User Interface"
+        A[Apify Actor Input] --> B[main.py]
+    end
+
+    subgraph "Core System"
+        B --> C[NewsletterCrew]
+        C --> D[Agent Orchestration]
+    end
+
+    subgraph "Agents"
+        D --> E[Researcher Agent]
+        D --> F[Writer Agent]
+        D --> G[Editor Agent]
+    end
+
+    subgraph "Tools"
+        E --> H[Google Search Tool]
+        E --> I[Reddit Tool]
+        E --> J[Twitter Tool]
+        E --> K[YouTube Tool]
+        E --> L[Google News Tool]
+    end
+
+    subgraph "Apify Integration"
+        H --> M[Apify Actors]
+        I --> M
+        J --> M
+        K --> M
+        L --> M
+        M --> N[Web Data]
+    end
+
+    subgraph "Output"
+        G --> O[Newsletter Content]
+        O --> P[Apify Actor Output]
+    end
+
+    classDef default fill:#F3F4F6,stroke:#D1D5DB,color:#1F2937
+    classDef core fill:#E5E7EB,stroke:#9CA3AF,color:#111827
+    classDef highlight fill:#DBEAFE,stroke:#93C5FD,color:#1E40AF
+    classDef agents fill:#FCE7F3,stroke:#F9A8D4,color:#9D174D
+    classDef tools fill:#D1FAE5,stroke:#6EE7B7,color:#065F46
+    classDef apify fill:#E0F2FE,stroke:#7DD3FC,color:#0C4A6E
+
+    class B,C,D core;
+    class E,F,G agents;
+    class H,I,J,K,L tools;
+    class M,N apify;
+```
+
+### Key Components
+
+1. **Entry Point**: `main.py` serves as the entry point for the Apify Actor, handling input and initializing the system.
+
+2. **Newsletter Crew**: The `NewsletterCrew` class orchestrates the agents and manages the workflow.
+
+3. **Agents**:
+   - `ResearcherAgent`: Gathers information using various tools
+   - `WriterAgent`: Transforms research into newsletter content
+   - `EditorAgent`: Reviews and improves the final output
+
+4. **Tools**: Each tool is implemented as a CrewAI `BaseTool` that interacts with Apify actors:
+   - `GoogleSearchTool`: Searches the web using Apify's Google Search Scraper
+   - `RedditTool`: Gathers discussions using a Reddit scraper
+   - `TwitterTool`: Collects tweets using Twitter Scraper Lite
+   - `YouTubeTool`: Finds videos using a YouTube scraper
+   - `GoogleNewsTool`: Gathers news using Google News Scraper
+
+5. **Apify Integration**: The `RunApifyActor` base class provides a standardized way to call Apify actors and process their results.
+
 ## CrewAI Implementation
 
 The Newsletter AI Agent uses [CrewAI](https://docs.crewai.com), a framework for orchestrating role-playing AI agents. Our implementation includes:
