@@ -1,0 +1,108 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Newsletter AI Agent",
+  "colors": {
+    "primary": "#0D9373",
+    "light": "#07C983",
+    "dark": "#0D9373"
+  },
+  "favicon": "/favicon.svg",
+  "navigation": {
+    "anchors": [
+      {
+        "anchor": "Documentation",
+        "icon": "book-open",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "introduction",
+              "getting-started"
+            ]
+          }
+        ]
+      },
+      {
+        "anchor": "API Reference",
+        "icon": "rectangle-terminal",
+        "groups": [
+          {
+            "group": "API Reference",
+            "pages": [
+              "api-reference/apify-integration",
+              "api-reference/actor-api"
+            ]
+          }
+        ]
+      },
+      {
+        "anchor": "Features",
+        "icon": "stars",
+        "groups": [
+          {
+            "group": "Features",
+            "pages": [
+              "features/overview",
+              "features/newsletter-generation"
+            ]
+          }
+        ]
+      },
+      {
+        "anchor": "Agents",
+        "icon": "user-group",
+        "groups": [
+          {
+            "group": "Agents",
+            "pages": [
+              "agents/overview",
+              "agents/researcher",
+              "agents/writer",
+              "agents/editor"
+            ]
+          }
+        ]
+      },
+      {
+        "anchor": "Tools",
+        "icon": "wrench",
+        "groups": [
+          {
+            "group": "Tools",
+            "pages": [
+              "tools/overview",
+              "tools/google-search",
+              "tools/reddit",
+              "tools/twitter",
+              "tools/youtube",
+              "tools/google-news"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "GitHub",
+        "href": "https://github.com/pratik-dani/newsletter-ai-agent"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Get Started",
+      "href": "https://www.datamagnet.co"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/pratik-dani/newsletter-ai-agent"
+    }
+  }
+}

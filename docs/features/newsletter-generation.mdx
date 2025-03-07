@@ -1,0 +1,150 @@
+---
+title: 'Newsletter Generation'
+description: 'Learn how the Newsletter AI Agent generates newsletters'
+---
+
+# Newsletter Generation
+
+The Newsletter AI Agent uses a sophisticated process powered by CrewAI to generate high-quality newsletters about specific topics. This page explains the newsletter generation process in detail.
+
+## Generation Process
+
+The newsletter generation process follows these steps:
+
+1. **Topic Specification**: The user specifies a topic of interest
+2. **Research**: The [Researcher Agent](/agents/researcher) gathers comprehensive information about the topic
+3. **Writing**: The [Writer Agent](/agents/writer) transforms the research data into engaging newsletter content
+4. **Editing**: The [Editor Agent](/agents/editor) reviews and finalizes the newsletter
+5. **Output**: The final newsletter is returned to the user
+
+## CrewAI Workflow
+
+The newsletter generation process is implemented using CrewAI, which orchestrates the agents and their tasks. The workflow is defined in the `NewsletterCrew` class:
+
+```python
+def generate_newsletter(self, topic: str) -> str:
+    # Create tasks for each agent
+    research_task = Task(
+        description=f"Research the topic '{topic}' and gather comprehensive information.",
+        expected_output="Detailed research data in JSON format.",
+        agent=self.researcher
+    )
+    
+    writing_task = Task(
+        description="Transform the research data into engaging newsletter content.",
+        expected_output="Draft newsletter in markdown format.",
+        agent=self.writer,
+        context=[research_task]
+    )
+    
+    editing_task = Task(
+        description="Review and finalize the newsletter content.",
+        expected_output="Final newsletter in markdown format.",
+        agent=self.editor,
+        context=[writing_task]
+    )
+    
+    # Execute the tasks
+    result = self.crew.kickoff(tasks=[research_task, writing_task, editing_task])
+    
+    return result
+```
+
+This workflow ensures that each agent builds upon the work of the previous one, creating a cohesive and high-quality newsletter.
+
+## Agent Interactions
+
+The agents interact with each other through the tasks' context. Each task has access to the output of its context tasks, allowing agents to build upon each other's work:
+
+1. The Researcher Agent performs its task independently, gathering information about the topic
+2. The Writer Agent receives the Researcher Agent's output as context for its task
+3. The Editor Agent receives the Writer Agent's output as context for its task
+
+This sequential process ensures that each agent has the information it needs to perform its task effectively.
+
+## Customization Options
+
+The newsletter generation process can be customized in several ways:
+
+### Topic Customization
+
+The most basic customization is specifying the topic of interest:
+
+```python
+from src.newsletter_crew import NewsletterCrew
+
+crew = NewsletterCrew()
+newsletter = crew.generate_newsletter("Artificial Intelligence")
+```
+
+### Section Customization
+
+You can customize the sections included in the newsletter by modifying the `DEFAULT_NEWSLETTER_SECTIONS` in `src/config/config.py`:
+
+```python
+DEFAULT_NEWSLETTER_SECTIONS = [
+    "Latest News",
+    "Industry Updates",
+    "Tools & Frameworks",
+    "Companies & Startups",
+    "Research & Development",
+    "Community Discussions",
+    "Video Content",
+    "Podcasts",
+]
+```
+
+### LLM Customization
+
+You can customize the language model used by the agents by modifying the `LLM` initialization in `src/newsletter_crew.py`:
+
+```python
+self.llm = LLM(
+    model="gemini/gemini-2.0-flash-lite",  # Change to another supported model
+    temperature=0.7,  # Adjust for more or less creativity
+    api_key=os.getenv("GOOGLE_API_KEY"),
+    verbose=False  # Set to True for more detailed output
+)
+```
+
+## Output Format
+
+The newsletter is generated in markdown format, which can be easily converted to HTML, PDF, or other formats. The markdown format includes:
+
+- **Headers**: For section titles and article titles
+- **Links**: For references to sources
+- **Formatting**: For emphasis, lists, and other styling
+- **Images**: For thumbnails and other visual elements
+
+Here's an example of the output format:
+
+```markdown
+# AI Technology Newsletter
+*Issue Date: March 7, 2025*
+
+**Focus Topic:** Artificial Intelligence
+
+## Executive Summary
+A brief summary of the latest developments in AI technology...
+
+## Latest News
+### [Google Announces New AI Model](https://example.com/news/1)
+*Published: March 5, 2025*
+
+Google has announced a new AI model that achieves state-of-the-art results on several benchmarks...
+
+## Industry Updates
+### [AI Adoption in Healthcare](https://example.com/news/2)
+*Published: March 3, 2025*
+
+Healthcare organizations are increasingly adopting AI technologies to improve patient care...
+
+## Tools & Frameworks
+### [New Version of TensorFlow Released](https://example.com/news/3)
+*Published: March 1, 2025*
+
+Google has released a new version of TensorFlow with improved performance and new features...
+
+---
+*This newsletter is automatically generated using AI technology.*
+*For more information, please contact us.*

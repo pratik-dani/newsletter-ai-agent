@@ -1,0 +1,98 @@
+---
+title: 'Agents Overview'
+description: 'Learn about the agent system used by the Newsletter AI Agent'
+---
+
+# Agents Overview
+
+The Newsletter AI Agent uses a multi-agent system powered by [CrewAI](https://github.com/joaomdmoura/crewAI) to generate newsletters. This system consists of three specialized agents that work together to research, write, and edit the newsletter content.
+
+## Agent Architecture
+
+The agent system is implemented using CrewAI, which provides a framework for creating and coordinating multiple agents. Each agent has a specific role, goal, and set of tools that it can use to accomplish its tasks.
+
+### Integration with Apify
+
+The agents use tools that leverage [Apify](https://apify.com) actors for web scraping and data collection. Apify provides a platform for running web scraping and automation tasks at scale, which allows the Newsletter AI Agent to gather information from various sources efficiently.
+
+The integration with Apify is implemented through a base class in `src/tools/base.py` that provides a standardized way to call Apify actors and process their results:
+
+```python
+class RunApifyActor:
+    """Run an Apify actor and return the results."""
+    def __init__(self, actor):
+        self.actor = actor
+
+    def _run(self, actor_name, run_input):
+        # Implementation to run the Apify actor and return results
+        # ...
+```
+
+## Agent Roles
+
+The Newsletter AI Agent consists of three specialized agents:
+
+### 1. Researcher Agent
+
+The [Researcher Agent](/agents/researcher) is responsible for gathering information about the specified topic. It uses a set of tools to search the web, collect social media posts, find relevant videos, and gather news articles.
+
+**Tools:**
+- [Google Scraper Tool](/tools/google-search): Uses the Apify Google Search Scraper actor to search the web
+- [Reddit Scraper Tool](/tools/reddit): Uses an Apify Reddit scraper actor to gather discussions
+- [Twitter Scraper Tool](/tools/twitter): Uses the Apify Twitter Scraper Lite actor to collect tweets
+- [YouTube Scraper Tool](/tools/youtube): Uses an Apify YouTube scraper actor to find videos
+- [Google News Scraper Tool](/tools/google-news): Uses the Apify Super Fast Google News Scraper actor to gather news articles
+
+### 2. Writer Agent
+
+The [Writer Agent](/agents/writer) is responsible for transforming the research data into engaging newsletter content. It takes the information gathered by the Researcher Agent and creates a well-structured newsletter draft.
+
+**Capabilities:**
+- Content creation from research data
+- Structuring the newsletter into sections
+- Formatting the content in markdown
+- Adding links to sources
+
+### 3. Editor Agent
+
+The [Editor Agent](/agents/editor) is responsible for reviewing and improving the newsletter draft. It ensures that the content is polished, error-free, and ready for distribution.
+
+**Capabilities:**
+- Grammar and spelling correction
+- Style and tone consistency
+- Fact-checking
+- Formatting and layout improvement
+
+## Agent Workflow
+
+The agents work together in a sequential workflow to generate the newsletter:
+
+1. The **Researcher Agent** gathers information about the specified topic
+2. The **Writer Agent** transforms the research data into a newsletter draft
+3. The **Editor Agent** reviews and improves the draft to create the final newsletter
+
+This workflow is orchestrated by the `NewsletterCrew` class in `src/newsletter_crew.py`, which creates the agents, defines their tasks, and manages the flow of information between them.
+
+## Agent Implementation
+
+Each agent is implemented as a class in the `src/agents` directory:
+
+- `src/agents/researcher.py`: Implements the Researcher Agent
+- `src/agents/writer.py`: Implements the Writer Agent
+- `src/agents/editor.py`: Implements the Editor Agent
+
+The agents are created using CrewAI's `Agent` class, which provides a framework for defining an agent's role, goal, backstory, and tools.
+
+## Configuration
+
+The agent system can be configured through environment variables and configuration files:
+
+- **Environment Variables**: Set API keys and other credentials in the `.env` file
+- **Configuration Files**: Modify agent behavior in the `src/config` directory
+
+## Next Steps
+
+- Learn more about the [Researcher Agent](/agents/researcher)
+- Explore the [Writer Agent](/agents/writer)
+- Discover the [Editor Agent](/agents/editor)
+- See how the agents contribute to the [newsletter generation process](/features/newsletter-generation)

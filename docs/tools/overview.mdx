@@ -1,0 +1,128 @@
+---
+title: 'Tools Overview'
+description: 'Learn about the custom tools used by the Newsletter AI Agent'
+---
+
+# Tools Overview
+
+The Newsletter AI Agent uses a set of custom tools powered by [Apify](https://docs.apify.com) actors to gather information from various sources. These tools are primarily used by the [Researcher Agent](/agents/researcher) to collect comprehensive data about the specified topic.
+
+## Tool Architecture
+
+The tools are implemented using CrewAI's `BaseTool` class and Apify's actor system. Each tool is designed to interact with a specific Apify actor to gather information from a particular source, such as Google Search, Reddit, Twitter, YouTube, or Google News.
+
+### Base Implementation
+
+All tools share a common base implementation in `src/tools/base.py` that handles the interaction with Apify actors:
+
+```python
+class RunApifyActor:
+    """Run an Apify actor and return the results."""
+    def __init__(self, actor):
+        self.actor = actor
+
+    def _run(self, actor_name, run_input):
+        # Implementation to run the Apify actor and return results
+        # ...
+```
+
+This base class provides a standardized way to call Apify actors and process their results.
+
+## Available Tools
+
+The Newsletter AI Agent includes the following tools:
+
+1. **[Google Scraper Tool](/tools/google-search)**: Uses the `apify/google-search-scraper` actor to search the web for relevant information
+2. **[Reddit Scraper Tool](/tools/reddit)**: Uses a Reddit scraper actor to gather discussions from relevant subreddits
+3. **[Twitter Scraper Tool](/tools/twitter)**: Uses the `apidojo/twitter-scraper-lite` actor to collect tweets related to the topic
+4. **[YouTube Scraper Tool](/tools/youtube)**: Uses a YouTube scraper actor to find relevant video content
+5. **[Google News Scraper Tool](/tools/google-news)**: Uses the `aymorato/super-fast-google-news-scraper-pay-per-result` actor to gather the latest news articles
+
+## Tool Implementation
+
+Each tool follows a similar pattern:
+
+1. Define an input schema using Pydantic models
+2. Create a tool class that inherits from `BaseTool`
+3. Implement the `_run` method to call the appropriate Apify actor
+
+Here's a general pattern for tool implementation:
+
+```python
+from crewai.tools import BaseTool
+from pydantic import BaseModel, Field, ConfigDict
+from typing import List, Optional
+from apify import Actor
+from src.tools.base import RunApifyActor
+
+class CustomToolInput(BaseModel):
+    """Input schema for the tool."""
+    # Define input parameters with descriptions
+    param1: List[str] = Field(description="Description of parameter 1")
+    param2: Optional[int] = Field(default=10, description="Description of parameter 2")
+
+class CustomTool(BaseTool):
+    name: str = "Tool Name"
+    description: str = "Tool description"
+    args_schema: type[BaseModel] = CustomToolInput
+    actor: Actor = Field(description="Apify Actor instance")
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    def _run(self, param1, param2=10, **kwargs):
+        # Prepare input for the Apify actor
+        run_inputs = {
+            "param1": param1,
+            "param2": param2
+        }
+        
+        # Run the Apify actor
+        run_actor = RunApifyActor(self.actor)
+        dataset = run_actor._run("apify/actor-name", run_inputs)
+        return dataset
+```
+
+## Apify Integration
+
+The tools use the Apify Python SDK to interact with Apify actors. This requires an Apify API key, which should be set in the `.env` file:
+
+```
+APIFY_API_KEY=your_apify_api_key_here
+```
+
+The Apify actors provide powerful web scraping and data extraction capabilities without requiring complex infrastructure setup.
+
+## Tool Usage
+
+Tools are assigned to the Researcher Agent during agent creation:
+
+```python
+@staticmethod
+def create(llm, actor) -> Agent:
+    return Agent(
+        role='Research Specialist',
+        goal='Gather comprehensive and accurate information about specified topics',
+        backstory="...",
+        tools=[
+            GoogleScraperTool(actor=actor),
+            RedditScraperTool(actor=actor),
+            TwitterScraperTool(actor=actor),
+            YouTubeScraperTool(actor=actor),
+            GoogleNewsScraperTool(actor=actor)
+        ],
+        verbose=True,
+        allow_delegation=False,
+        llm=llm
+    )
+```
+
+## Next Steps
+
+Explore each tool in detail:
+
+- [Google Scraper Tool](/tools/google-search)
+- [Reddit Scraper Tool](/tools/reddit)
+- [Twitter Scraper Tool](/tools/twitter)
+- [YouTube Scraper Tool](/tools/youtube)
+- [Google News Scraper Tool](/tools/google-news)
+
+Or learn about the [agents](/agents/overview) that use these tools to generate newsletters.

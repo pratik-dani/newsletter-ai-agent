@@ -1,0 +1,103 @@
+---
+title: 'Features Overview'
+description: 'Explore the features of the Newsletter AI Agent'
+---
+
+# Features Overview
+
+The Newsletter AI Agent offers a range of features powered by CrewAI to help you generate high-quality newsletters about specific topics.
+
+## Core Features
+
+### Agent-Based Architecture
+
+The Newsletter AI Agent uses a multi-agent architecture powered by CrewAI:
+
+- **[Researcher Agent](/agents/researcher)**: Gathers comprehensive information about the specified topic
+- **[Writer Agent](/agents/writer)**: Transforms research data into engaging newsletter content
+- **[Editor Agent](/agents/editor)**: Reviews and finalizes the newsletter
+
+This agent-based approach allows each agent to specialize in a specific aspect of the newsletter creation process, resulting in better overall quality.
+
+### Custom Tools
+
+The agents use custom tools to gather information from various sources:
+
+- **[Google Search Tool](/tools/google-search)**: Searches the web for relevant information
+- **[Reddit Tool](/tools/reddit)**: Gathers discussions from relevant subreddits
+- **[Twitter Tool](/tools/twitter)**: Collects tweets related to the topic
+- **[YouTube Tool](/tools/youtube)**: Finds relevant video content
+- **[Google News Tool](/tools/google-news)**: Gathers the latest news articles
+
+### Automated Newsletter Generation
+
+The Newsletter AI Agent automates the entire newsletter generation process:
+
+1. **Topic Specification**: You specify a topic of interest
+2. **Research**: The Researcher Agent gathers comprehensive information
+3. **Writing**: The Writer Agent transforms the research data into engaging content
+4. **Editing**: The Editor Agent reviews and finalizes the newsletter
+5. **Output**: The final newsletter is returned to you
+
+### Markdown Formatting
+
+The Newsletter AI Agent generates newsletters in markdown format, which can be easily converted to HTML, PDF, or other formats. The markdown format includes:
+
+- **Headers**: For section titles and article titles
+- **Links**: For references to sources
+- **Formatting**: For emphasis, lists, and other styling
+- **Images**: For thumbnails and other visual elements
+
+## Advanced Features
+
+### Customizable Sections
+
+You can customize the sections included in your newsletters by modifying the `DEFAULT_NEWSLETTER_SECTIONS` in `src/config/config.py`:
+
+```python
+DEFAULT_NEWSLETTER_SECTIONS = [
+    "Latest News",
+    "Industry Updates",
+    "Tools & Frameworks",
+    "Companies & Startups",
+    "Research & Development",
+    "Community Discussions",
+    "Video Content",
+    "Podcasts",
+]
+```
+
+### LLM Customization
+
+You can customize the language model used by the agents by modifying the `LLM` initialization in `src/newsletter_crew.py`:
+
+```python
+self.llm = LLM(
+    model="gemini/gemini-2.0-flash-lite",  # Change to another supported model
+    temperature=0.7,  # Adjust for more or less creativity
+    api_key=os.getenv("GOOGLE_API_KEY"),
+    verbose=False  # Set to True for more detailed output
+)
+```
+
+### CrewAI Integration
+
+The Newsletter AI Agent is built on top of CrewAI, a framework for orchestrating role-playing AI agents. This integration provides:
+
+- **Task Management**: CrewAI manages the tasks assigned to each agent
+- **Agent Coordination**: CrewAI coordinates the interactions between agents
+- **Context Sharing**: CrewAI enables agents to share context and build upon each other's work
+
+### Extensibility
+
+The Newsletter AI Agent is designed to be extensible:
+
+- **Add New Agents**: You can add new agents to the crew to handle additional tasks
+- **Add New Tools**: You can create new tools to gather information from additional sources
+- **Customize Workflows**: You can modify the workflow to include additional steps or change the order of existing steps
+
+## Next Steps
+
+- Learn more about the [Newsletter Generation](/features/newsletter-generation) process
+- Explore the [Agents](/agents/overview) that power the Newsletter AI Agent
+- Check out the [Tools](/tools/overview) used to gather information

@@ -1,0 +1,92 @@
+---
+title: 'Researcher Agent'
+description: 'Learn about the Researcher Agent in the Newsletter AI Agent'
+---
+
+# Researcher Agent
+
+The Researcher Agent is responsible for gathering comprehensive and accurate information about the specified topic from various sources. It serves as the foundation for the newsletter generation process, providing the raw material that the Writer Agent will transform into engaging content.
+
+## Role and Responsibilities
+
+The Researcher Agent is defined with the following attributes:
+
+- **Role**: Research Specialist
+- **Goal**: Gather comprehensive and accurate information about specified topics
+- **Backstory**: An expert research specialist with a keen eye for detail and the ability to find the most relevant and up-to-date information, specializing in AI technology, industry trends, and market analysis.
+
+## Tools
+
+The Researcher Agent is equipped with several tools to gather information from different sources:
+
+- **[Google Scraper Tool](/tools/google-search)**: Searches the web for relevant information
+- **[Reddit Scraper Tool](/tools/reddit)**: Gathers discussions from relevant subreddits
+- **[Twitter Scraper Tool](/tools/twitter)**: Collects tweets related to the topic
+- **[YouTube Scraper Tool](/tools/youtube)**: Finds relevant video content
+- **[Google News Scraper Tool](/tools/google-news)**: Gathers the latest news articles
+
+These tools allow the agent to collect information from a wide range of sources, ensuring comprehensive coverage of the topic.
+
+## Implementation
+
+The Researcher Agent is implemented in `src/agents/researcher.py` using CrewAI's Agent class:
+
+```python
+@staticmethod
+def create(llm, actor) -> Agent:
+    return Agent(
+        role='Research Specialist',
+        goal='Gather comprehensive and accurate information about specified topics',
+        backstory="""You are an expert research specialist with a keen eye for detail 
+        and the ability to find the most relevant and up-to-date information. You 
+        specialize in AI technology, industry trends, and market analysis.""",
+        tools=[
+            GoogleScraperTool(actor=actor),
+            RedditScraperTool(actor=actor),
+            TwitterScraperTool(actor=actor),
+            YouTubeScraperTool(actor=actor),
+            GoogleNewsScraperTool(actor=actor)
+        ],
+        verbose=True,
+        allow_delegation=False,
+        llm=llm
+    )
+```
+
+## Research Process
+
+When assigned a task, the Researcher Agent follows this process:
+
+1. **Search for Information**: Uses its tools to search for information related to the topic
+2. **Filter and Organize**: Filters the information based on relevance, recency, and credibility
+3. **Structure the Data**: Organizes the information into categories for easier processing by the Writer Agent
+4. **Provide Sources**: Includes links to the original sources for reference
+
+The agent's output is structured as a JSON object with sections for different types of content:
+
+```json
+{
+  "summary": "Brief overview of the topic",
+  "key_points": ["Key point 1", "Key point 2", "..."],
+  "sources": ["URL1", "URL2", "..."],
+  "sections": {
+    "Latest News": [{"title": "News Title", "description": "News Description", "url": "URL"}],
+    "Community Discussions": [{"title": "Discussion Title", "text": "Discussion Text", "url": "URL"}],
+    "Social Media Insights": [{"text": "Tweet Text", "author": "Author", "url": "URL"}],
+    "Video Content": [{"title": "Video Title", "description": "Video Description", "url": "URL"}]
+  }
+}
+```
+
+## Configuration
+
+The Researcher Agent can be configured by modifying its creation parameters in `src/agents/researcher.py`:
+
+- **LLM**: Change the language model used by the agent
+- **Tools**: Add or remove tools to change the sources of information
+- **Verbosity**: Set `verbose` to `True` or `False` to control the amount of output
+
+## Next Steps
+
+- Learn about the [Writer Agent](/agents/writer) that transforms the research data into engaging content
+- Explore the [tools](/tools/overview) that the Researcher Agent uses to gather information

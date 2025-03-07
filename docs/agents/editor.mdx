@@ -1,0 +1,104 @@
+---
+title: 'Editor Agent'
+description: 'Learn about the Editor Agent in the Newsletter AI Agent'
+---
+
+# Editor Agent
+
+The Editor Agent is the final agent in the newsletter generation process, responsible for reviewing, refining, and ensuring the quality of the newsletter content. It takes the draft created by the Writer Agent and transforms it into a polished, publication-ready newsletter.
+
+## Role and Responsibilities
+
+The Editor Agent is defined with the following attributes:
+
+- **Role**: Newsletter Editor
+- **Goal**: Review, refine, and ensure the quality of the newsletter content
+- **Backstory**: An experienced editor with expertise in technology publications, ensuring content is accurate, engaging, well-structured, and maintains a consistent style throughout.
+
+## Implementation
+
+The Editor Agent is implemented in `src/agents/editor.py` using CrewAI's Agent class:
+
+```python
+@staticmethod
+def create(llm) -> Agent:
+    return Agent(
+        role='Newsletter Editor',
+        goal='Review, refine, and ensure the quality of the newsletter content',
+        backstory="""You are an experienced editor with expertise in technology 
+        publications. You ensure content is accurate, engaging, well-structured, 
+        and maintains a consistent style throughout. You are also responsible for 
+        ensuring the content is up to date and relevant to the latest trends in the 
+        technology industry. Include all the links to the sources in the content.""",
+        tools=[],  # No additional tools needed for editing
+        verbose=True,
+        allow_delegation=False,
+        llm=llm
+    )
+```
+
+Like the Writer Agent, the Editor Agent doesn't use external tools, relying instead on its language model capabilities to review and improve the content.
+
+## Editing Process
+
+When assigned a task, the Editor Agent follows this process:
+
+1. **Review Content**: Examines the draft newsletter provided by the Writer Agent
+2. **Check for Issues**: Identifies problems with formatting, structure, or content
+3. **Improve Content**: Makes changes to enhance readability and engagement
+4. **Ensure Consistency**: Maintains a consistent style throughout the newsletter
+5. **Finalize Newsletter**: Adds metadata and finalizes the newsletter for publication
+
+## Content Review
+
+The Editor Agent reviews the content for several common issues:
+
+- **Length**: Ensures the content is substantial enough
+- **Markdown Formatting**: Checks for proper headers, links, and spacing
+- **Header Hierarchy**: Ensures consistent and logical header levels
+- **Link Integrity**: Verifies that all links are properly formatted
+- **List Formatting**: Ensures proper formatting of list items
+
+## Newsletter Finalization
+
+The Editor Agent finalizes the newsletter by adding metadata and a consistent structure:
+
+```markdown
+# AI Technology Newsletter
+*Issue Date: March 7, 2025*
+
+**Focus Topic:** AI Agents
+
+## Executive Summary
+Brief summary of the newsletter content...
+
+[Main content sections...]
+
+---
+*This newsletter is automatically generated using AI technology.*
+*For more information, please contact us.*
+```
+
+## Quality Assessment
+
+The Editor Agent provides a quality score for the newsletter based on various factors:
+
+- **Content Structure**: Proper organization and flow
+- **Markdown Formatting**: Correct use of markdown elements
+- **Link Integrity**: Properly formatted and working links
+- **Spacing and Readability**: Appropriate spacing and formatting for readability
+
+The quality score ranges from 0.0 to 1.0, with higher scores indicating better quality.
+
+## Configuration
+
+The Editor Agent can be configured by modifying its creation parameters in `src/agents/editor.py`:
+
+- **LLM**: Change the language model used by the agent
+- **Verbosity**: Set `verbose` to `True` or `False` to control the amount of output
+
+## Next Steps
+
+- Learn about the [Writer Agent](/agents/writer) that creates the draft newsletter
+- Explore the [Researcher Agent](/agents/researcher) that gathers the information
+- Understand the [overall agent architecture](/agents/overview) of the Newsletter AI Agent

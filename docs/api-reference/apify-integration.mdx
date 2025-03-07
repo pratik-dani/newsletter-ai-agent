@@ -1,0 +1,102 @@
+---
+title: 'Apify Integration'
+description: 'Learn how to use the Newsletter AI Agent with Apify'
+---
+
+# Apify Integration
+
+The Newsletter AI Agent is implemented as an [Apify Actor](https://apify.com/docs/actors), which means it runs on the Apify platform and can be accessed through Apify's API.
+
+## Setting Up Apify
+
+To use the Newsletter AI Agent, you'll need an Apify account and API key:
+
+1. [Sign up](https://console.apify.com/sign-up) for an Apify account if you don't have one
+2. Navigate to your [Account Settings](https://console.apify.com/account#/integrations) to find your API key
+3. Store your API key securely
+
+## Required Environment Variables
+
+The Newsletter AI Agent requires the following environment variables:
+
+```bash
+# In your .env file
+APIFY_API_KEY=your_apify_api_key_here
+GOOGLE_API_KEY=your_google_api_key_here
+```
+
+## Running the Actor
+
+You can run the Newsletter AI Agent in several ways:
+
+### Using the Apify Console
+
+1. Navigate to the Newsletter AI Agent on the Apify platform
+2. Configure the input parameters (topic for the newsletter)
+3. Click "Run" to start the actor
+
+### Using the Apify API
+
+You can also run the actor programmatically using the Apify API:
+
+```python
+import os
+from apify_client import ApifyClient
+
+# Initialize the ApifyClient with your API token
+client = ApifyClient(os.getenv('APIFY_API_KEY'))
+
+# Start the actor and wait for it to finish
+run = client.actor('your-username/newsletter-ai-agent').call({
+    'topic': 'AI advancements in healthcare'
+})
+
+# Fetch the actor's output
+output = client.dataset(run['defaultDatasetId']).list_items().items[0]
+newsletter_content = output['content']
+print(newsletter_content)
+```
+
+## Input Parameters
+
+The Newsletter AI Agent accepts the following input parameters:
+
+| Parameter | Type | Description | Required |
+| --- | --- | --- | --- |
+| `topic` | string | The topic for the newsletter | Yes |
+
+## Output Format
+
+The actor outputs the generated newsletter in Markdown format, along with metadata:
+
+```json
+{
+  "topic": "AI advancements in healthcare",
+  "content": "# AI in Healthcare Newsletter\n\n...",
+  "status": "success",
+  "timestamp": "2023-01-01T12:00:00Z"
+}
+```
+
+## Error Handling
+
+If an error occurs during newsletter generation, the actor will output an error message:
+
+```json
+{
+  "topic": "AI advancements in healthcare",
+  "error": "Error in newsletter generation: ...",
+  "status": "error",
+  "timestamp": "2023-01-01T12:00:00Z"
+}
+```
+
+## Rate Limiting
+
+Usage of the Newsletter AI Agent is subject to Apify's rate limiting and pricing. Please refer to the [Apify pricing page](https://apify.com/pricing) for more information.
+
+## Next Steps
+
+- Learn about the [agents](/agents/overview) that power the Newsletter AI Agent
+- Explore the [tools](/tools/overview) used by the agents
+- See how the Newsletter AI Agent [generates newsletters](/features/newsletter-generation)

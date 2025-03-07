@@ -1,0 +1,113 @@
+---
+title: 'Writer Agent'
+description: 'Learn about the Writer Agent in the Newsletter AI Agent'
+---
+
+# Writer Agent
+
+The Writer Agent is responsible for transforming research data into engaging and informative newsletter content. It takes the raw information gathered by the Researcher Agent and crafts it into well-structured, readable sections that form the draft newsletter.
+
+## Role and Responsibilities
+
+The Writer Agent is defined with the following attributes:
+
+- **Role**: Content Writer
+- **Goal**: Create engaging and informative newsletter content from research materials
+- **Backstory**: A skilled content writer specializing in technology and AI topics, excelling at transforming complex information into clear, engaging content that resonates with both technical and non-technical readers.
+
+## Implementation
+
+The Writer Agent is implemented in `src/agents/writer.py` using CrewAI's Agent class:
+
+```python
+@staticmethod
+def create(llm) -> Agent:
+    return Agent(
+        role='Content Writer',
+        goal='Create engaging and informative newsletter content from research materials',
+        backstory="""You are a skilled content writer specializing in technology 
+        and AI topics. You excel at transforming complex information into clear, 
+        engaging content that resonates with both technical and non-technical readers. 
+        You are also responsible for ensuring the content is up to date and relevant to 
+        the latest trends in the technology industry. Include all the links to the 
+        sources in the content.""",
+        tools=[],  # No additional tools needed for content writing
+        verbose=True,
+        allow_delegation=False,
+        llm=llm
+    )
+```
+
+Unlike the Researcher Agent, the Writer Agent doesn't use external tools. Instead, it relies on its language model capabilities to transform the research data into engaging content.
+
+## Content Creation Process
+
+When assigned a task, the Writer Agent follows this process:
+
+1. **Analyze Research Data**: Reviews the information provided by the Researcher Agent
+2. **Structure Content**: Organizes the content into logical sections based on the research data
+3. **Write Engaging Sections**: Creates well-written, engaging content for each section
+4. **Format in Markdown**: Ensures proper markdown formatting for headings, links, and other elements
+5. **Include Sources**: Incorporates links to original sources throughout the content
+
+## Section Formatting
+
+The Writer Agent formats different types of content according to their nature:
+
+### News Section
+
+```markdown
+### [News Title](URL)
+*Published: Date*
+
+News description text...
+```
+
+### Community Discussions
+
+```markdown
+### [Discussion Title](URL)
+*Posted by Author*
+
+Discussion text...
+```
+
+### Social Media Insights
+
+```markdown
+> Tweet text
+*— Author*
+[View on Twitter](URL)
+```
+
+### Video Content
+
+```markdown
+### [Video Title](URL)
+*By Channel*
+
+Video description...
+```
+
+## Markdown Formatting
+
+The Writer Agent ensures proper markdown formatting through several helper methods:
+
+- **format_markdown**: Cleans up the content and ensures proper spacing
+- **_format_news_section**: Formats news items into markdown content
+- **_format_community_section**: Formats community discussions into markdown content
+- **_format_social_section**: Formats social media content into markdown content
+- **_format_video_section**: Formats video content into markdown content
+- **_format_general_section**: Formats general content into markdown content
+
+## Configuration
+
+The Writer Agent can be configured by modifying its creation parameters in `src/agents/writer.py`:
+
+- **LLM**: Change the language model used by the agent
+- **Verbosity**: Set `verbose` to `True` or `False` to control the amount of output
+
+## Next Steps
+
+- Learn about the [Editor Agent](/agents/editor) that reviews and finalizes the newsletter
+- Explore the [Researcher Agent](/agents/researcher) that provides the raw material for the Writer Agent

@@ -1,0 +1,143 @@
+---
+title: 'Actor API'
+description: 'Technical details of the Newsletter AI Agent Apify Actor API'
+---
+
+# Newsletter AI Agent Actor API
+
+This document provides technical details about the Newsletter AI Agent Apify Actor API, including input schema, output format, and usage examples.
+
+## Actor Input Schema
+
+The Newsletter AI Agent Actor accepts the following input parameters:
+
+```json
+{
+  "topic": "string"
+}
+```
+
+### Parameters
+
+| Parameter | Type | Description | Required | Default |
+| --- | --- | --- | --- | --- |
+| `topic` | string | The topic for the newsletter | No | "I want to know everything about AI agents – current news, AI agentic platforms and frameworks, and companies in this field." |
+
+## Actor Output Schema
+
+The actor outputs the generated newsletter in the following format:
+
+```json
+{
+  "topic": "string",
+  "content": "string",
+  "status": "string",
+  "timestamp": "string"
+}
+```
+
+### Output Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `topic` | string | The topic that was used to generate the newsletter |
+| `content` | string | The generated newsletter content in Markdown format |
+| `status` | string | The status of the generation process ("success" or "error") |
+| `timestamp` | string | ISO 8601 formatted timestamp of when the newsletter was generated |
+
+## Error Output Schema
+
+If an error occurs during newsletter generation, the actor will output:
+
+```json
+{
+  "topic": "string",
+  "error": "string",
+  "status": "error",
+  "timestamp": "string"
+}
+```
+
+### Error Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `topic` | string | The topic that was used (if available) |
+| `error` | string | Error message describing what went wrong |
+| `status` | string | Always "error" for error outputs |
+| `timestamp` | string | ISO 8601 formatted timestamp of when the error occurred |
+
+## Usage Examples
+
+### Running the Actor via Apify Console
+
+1. Navigate to the Newsletter AI Agent on the Apify platform
+2. Set the `topic` input parameter to your desired topic
+3. Click "Run" to start the actor
+4. Wait for the actor to complete
+5. View the results in the "Dataset" tab
+
+### Running the Actor via Apify API Client (Python)
+
+```python
+import os
+from apify_client import ApifyClient
+
+# Initialize the ApifyClient with your API token
+client = ApifyClient(os.getenv('APIFY_API_KEY'))
+
+# Start the actor and wait for it to finish
+run = client.actor('your-username/newsletter-ai-agent').call({
+    'topic': 'Latest advancements in quantum computing'
+})
+
+# Fetch the actor's output
+output = client.dataset(run['defaultDatasetId']).list_items().items[0]
+newsletter_content = output['content']
+
+# Do something with the newsletter content
+print(newsletter_content)
+```
+
+### Running the Actor via Apify API Client (JavaScript)
+
+```javascript
+const { ApifyClient } = require('apify-client');
+
+// Initialize the ApifyClient with your API token
+const client = new ApifyClient({
+    token: process.env.APIFY_API_KEY,
+});
+
+// Start the actor and wait for it to finish
+const run = await client.actor('your-username/newsletter-ai-agent').call({
+    topic: 'Latest advancements in quantum computing',
+});
+
+// Fetch the actor's output
+const { items } = await client.dataset(run.defaultDatasetId).listItems();
+const newsletterContent = items[0].content;
+
+// Do something with the newsletter content
+console.log(newsletterContent);
+```
+
+## Actor Lifecycle
+
+1. The actor initializes and loads environment variables
+2. It processes the input parameters (using default if none provided)
+3. It creates a NewsletterCrew instance with the necessary agents
+4. The Researcher Agent gathers information about the topic
+5. The Writer Agent transforms the research into a newsletter draft
+6. The Editor Agent reviews and improves the draft
+7. The final newsletter is returned as output
+
+## Resource Usage
+
+The Newsletter AI Agent performs web scraping and uses large language models, which can be resource-intensive. The actor typically takes 3-5 minutes to generate a newsletter, depending on the complexity of the topic and the amount of information available.
+
+## Next Steps
+
+- Learn about the [agents](/agents/overview) that power the Newsletter AI Agent
+- Explore the [tools](/tools/overview) used by the agents
+- See how the Newsletter AI Agent [generates newsletters](/features/newsletter-generation)

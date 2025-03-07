@@ -1,0 +1,82 @@
+{
+  "name": "Newsletter AI Agent",
+  "logo": {
+    "dark": "/logo/dark.svg",
+    "light": "/logo/light.svg"
+  },
+  "favicon": "/favicon.svg",
+  "colors": {
+    "primary": "#0D9373",
+    "light": "#07C983",
+    "dark": "#0D9373"
+  },
+  "topbarLinks": [
+    {
+      "name": "GitHub",
+      "url": "https://github.com/pratik-dani/newsletter-ai-agent"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Get Started",
+    "url": "/getting-started"
+  },
+  "anchors": [
+    {
+      "name": "API Reference",
+      "icon": "rectangle-terminal",
+      "url": "api-reference"
+    },
+    {
+      "name": "Features",
+      "icon": "stars",
+      "url": "features"
+    },
+    {
+      "name": "Agents",
+      "icon": "user-group",
+      "url": "agents"
+    },
+    {
+      "name": "Tools",
+      "icon": "wrench",
+      "url": "tools"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Getting Started",
+      "pages": ["introduction", "getting-started"]
+    },
+    {
+      "group": "Features",
+      "pages": ["features/overview", "features/newsletter-generation"]
+    },
+    {
+      "group": "Agents",
+      "pages": [
+        "agents/overview",
+        "agents/researcher",
+        "agents/writer",
+        "agents/editor"
+      ]
+    },
+    {
+      "group": "Tools",
+      "pages": [
+        "tools/overview",
+        "tools/google-search",
+        "tools/reddit",
+        "tools/twitter",
+        "tools/youtube",
+        "tools/google-news"
+      ]
+    },
+    {
+      "group": "API Reference",
+      "pages": ["api-reference/authentication"]
+    }
+  ],
+  "footerSocials": {
+    "github": "https://github.com/pratik-dani/newsletter-ai-agent"
+  }
+}

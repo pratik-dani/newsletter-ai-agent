@@ -1,0 +1,102 @@
+---
+title: 'Getting Started'
+description: 'Learn how to use the Newsletter AI Agent'
+---
+
+# Getting Started
+
+This guide will help you set up and start using the Newsletter AI Agent powered by CrewAI.
+
+## Installation
+
+To use the Newsletter AI Agent, you need to:
+
+1. Clone the repository:
+```bash
+git clone https://github.com/pratik-dani/newsletter-ai-agent.git
+cd newsletter-ai-agent
+```
+
+2. Install the required dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+3. Set up your environment variables:
+```bash
+cp .env.example .env
+```
+
+Edit the `.env` file to include your API keys and other configuration options:
+
+```
+# Required API keys
+GOOGLE_API_KEY=your_google_api_key_here  # Required for the LLM and search tools
+APIFY_API_KEY=your_apify_api_key_here    # Required for web scraping tools
+```
+
+## Basic Usage
+
+1. Define your topic of interest in the `input.json` file:
+```json
+{
+    "topic": "Your topic of interest"
+}
+```
+
+2. Run the agent:
+```bash
+python src/main.py
+```
+
+3. Find your generated newsletter in the output directory.
+
+## CrewAI Configuration
+
+The Newsletter AI Agent uses CrewAI to orchestrate a team of specialized agents. The main configuration is in `src/newsletter_crew.py`:
+
+```python
+# Initialize the LLM
+self.llm = LLM(
+    model="gemini/gemini-2.0-flash-lite",  # You can change this to another supported model
+    temperature=0.7,
+    api_key=os.getenv("GOOGLE_API_KEY"),
+    verbose=False
+)
+
+# Create the crew with agents
+self.crew = Crew(
+    agents=[self.researcher, self.writer, self.editor],
+    tasks=[],  # Tasks are added dynamically when generating a newsletter
+    verbose=True  # Set to False to reduce console output
+)
+```
+
+You can customize the following aspects:
+
+- **LLM Model**: Change the `model` parameter to use a different language model
+- **Temperature**: Adjust the `temperature` parameter to control creativity vs. determinism
+- **Verbosity**: Set `verbose` to `True` or `False` to control the amount of output
+
+## Customizing Newsletter Content
+
+You can customize the content of your newsletters by modifying the `DEFAULT_NEWSLETTER_SECTIONS` in `src/config/config.py`:
+
+```python
+DEFAULT_NEWSLETTER_SECTIONS = [
+    "Latest News",
+    "Industry Updates",
+    "Tools & Frameworks",
+    "Companies & Startups",
+    "Research & Development",
+    "Community Discussions",
+    "Video Content",
+    "Podcasts",
+]
+```
+
+## Next Steps
+
+- Learn more about the [Agents](/agents/overview) that power the Newsletter AI Agent
+- Explore the [Custom Tools](/tools/overview) used to gather information
+- Check out the [Features](/features/overview) section to learn more about what the Newsletter AI Agent can do
