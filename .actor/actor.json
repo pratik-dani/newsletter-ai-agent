@@ -1,0 +1,41 @@
+{
+	"actorSpecification": 1,
+	"name": "newsletter-agent",
+	"title": "AI Newsletter Generator",
+	"description": "An AI-powered system that generates well-structured newsletters using a crew of specialized AI agents.",
+	"version": "1.0",
+	"buildTag": "latest",
+	"meta": {
+		"templateId": "python-empty"
+	},
+	"dockerfile": "./Dockerfile",
+	"input": "./input_schema.json",
+	"storages": {
+		"dataset": {
+			"actorSpecification": 1,
+			"title": "Newsletter Dataset",
+			"description": "Contains generated newsletters and their metadata",
+			"views": {
+				"newsletters": {
+					"title": "Generated Newsletters",
+					"transformation": {
+						"fields": [
+							"topic",
+							"content",
+							"status",
+							"timestamp"
+						]
+					},
+					"display": {
+						"component": "table",
+						"columns": [
+							{ "label": "Topic", "field": "topic" },
+							{ "label": "Status", "field": "status" },
+							{ "label": "Generated At", "field": "timestamp" }
+						]
+					}
+				}
+			}
+		}
+	}
+}

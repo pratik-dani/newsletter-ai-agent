@@ -1,0 +1,15 @@
+{
+    "title": "Newsletter Generator Input",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "topic": {
+            "title": "Newsletter Topic",
+            "type": "string",
+            "description": "The topic or subject for the newsletter. Can include specific requirements or focus areas.",
+            "editor": "textfield",
+            "example": "I want to know everything about AI agents – current news, AI agentic platforms and frameworks, and companies in this field."
+        }
+    },
+    "required": ["topic"]
+} 
