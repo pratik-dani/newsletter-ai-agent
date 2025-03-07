@@ -12,6 +12,10 @@ from apify import Actor
 from dotenv import load_dotenv
 from src.newsletter_crew import NewsletterCrew
 from datetime import datetime
+# Must precede any llm module imports
+
+from langtrace_python_sdk import langtrace
+langtrace.init(api_key = os.getenv("LANGTRACE_API_KEY"))
 
 async def main() -> None:
     """
@@ -57,7 +61,7 @@ async def main() -> None:
             # Check if the content indicates an error
             # if newsletter_content.startswith("# Error Generating Newsletter"):
             #     raise RuntimeError(newsletter_content)
-            
+            await Actor.charge("generate-newsletter")
             # Push the result to the actor's default dataset
             await actor.push_data({
                 'topic': user_input,
