@@ -1,26 +1,86 @@
-# AI Newsletter Generator
+# Newsletter AI Agent
 
 An AI-powered Apify actor that generates well-structured newsletters using a crew of specialized AI agents. The system uses CrewAI to coordinate multiple agents that research, write, and edit newsletter content based on user input.
 
-## Mintlify Documentation
-[![Mintlify Docs](https://img.shields.io/badge/docs-mintlify-blue.svg)](https://newsletter-ai-agent.pratikdani.com/)
+## Documentation
+[![Documentation](https://img.shields.io/badge/docs-online-blue.svg)](https://newsletter-ai-agent.pratikdani.com/)
 
 ## Features
 
-- Multi-agent system using CrewAI
-- Specialized agents for research, writing, and editing
-- Markdown-formatted output
-- Configurable newsletter sections
-- Google's Gemini Pro LLM integration
-- Apify Actor integration for scalable deployment
+- **Multi-agent System**: Uses CrewAI to coordinate specialized agents for research, writing, and editing
+- **Apify Integration**: Leverages Apify actors for efficient web scraping and data collection
+- **Comprehensive Research**: Gathers information from multiple sources:
+  - Google Search results
+  - Latest news articles
+  - Reddit discussions
+  - Twitter/X posts
+  - YouTube videos
+- **Intelligent Processing**: Transforms raw data into well-structured newsletters
+- **Markdown Output**: Delivers clean, formatted content ready for distribution
+- **Configurable Sections**: Customize newsletter structure and content focus
+
+## Architecture
+
+```mermaid
+graph TD
+    subgraph "User Interface"
+        A[Apify Actor Input] --> B[main.py]
+    end
+
+    subgraph "Core System"
+        B --> C[NewsletterCrew]
+        C --> D[Agent Orchestration]
+    end
+
+    subgraph "Agents"
+        D --> E[Researcher Agent]
+        D --> F[Writer Agent]
+        D --> G[Editor Agent]
+    end
+
+    subgraph "Tools"
+        E --> H[Google Search Tool]
+        E --> I[Reddit Tool]
+        E --> J[Twitter Tool]
+        E --> K[YouTube Tool]
+        E --> L[Google News Tool]
+    end
+
+    subgraph "Apify Integration"
+        H --> M[Apify Actors]
+        I --> M
+        J --> M
+        K --> M
+        L --> M
+        M --> N[Web Data]
+    end
+
+    subgraph "Output"
+        G --> O[Newsletter Content]
+        O --> P[Apify Actor Output]
+    end
+
+    classDef default fill:#F3F4F6,stroke:#D1D5DB,color:#1F2937
+    classDef core fill:#E5E7EB,stroke:#9CA3AF,color:#111827
+    classDef highlight fill:#DBEAFE,stroke:#93C5FD,color:#1E40AF
+    classDef agents fill:#FCE7F3,stroke:#F9A8D4,color:#9D174D
+    classDef tools fill:#D1FAE5,stroke:#6EE7B7,color:#065F46
+    classDef apify fill:#E0F2FE,stroke:#7DD3FC,color:#0C4A6E
+
+    class B,C,D core;
+    class E,F,G agents;
+    class H,I,J,K,L tools;
+    class M,N apify;
+```
 
 ## Prerequisites
 
 - Python 3.10+
+- Apify API key
 - Google API key for Gemini Pro
 - Apify CLI (for local development)
 
-## Local Development
+## Environment Setup
 
 1. Clone the repository:
 ```bash
@@ -28,15 +88,15 @@ git clone [repository-url]
 cd newsletter-agent
 ```
 
-2. Install Apify CLI if you haven't already:
+2. Install Apify CLI:
 ```bash
 npm install -g apify-cli
 ```
 
-3. Create a virtual environment and activate it:
+3. Create and activate virtual environment:
 ```bash
-python -m venv .venv
-source .venv/bin/activate  # On Windows, use `.venv\Scripts\activate`
+python -m venv venv
+source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
 ```
 
 4. Install dependencies:
@@ -44,87 +104,101 @@ source .venv/bin/activate  # On Windows, use `.venv\Scripts\activate`
 pip install -r requirements.txt
 ```
 
-5. Create a `.env` file in the root directory and add your Google API key:
-```
-GOOGLE_API_KEY=your_api_key_here
+5. Configure environment variables in `.env`:
+```bash
+APIFY_API_KEY=your_apify_api_key_here
+GOOGLE_API_KEY=your_google_api_key_here
 ```
 
-## Running Locally
+## Usage
 
-1. Run the actor using Apify CLI:
+### Local Development
+
+1. Run the actor locally:
 ```bash
 apify run
 ```
 
-The actor will use the input from `storage/key_value_stores/default/INPUT.json`. You can modify this file to change the newsletter topic.
+2. Test with custom input by modifying `storage/key_value_stores/default/INPUT.json`:
+```json
+{
+    "topic": "Your newsletter topic here"
+}
+```
 
-## Deploying to Apify
+### Apify Platform Deployment
 
-1. Log in to Apify:
+1. Login to Apify:
 ```bash
 apify login
 ```
 
-2. Push the actor to Apify platform:
+2. Deploy the actor:
 ```bash
 apify push
 ```
 
-## Input
-
-The actor accepts the following input:
+## Input Schema
 
 ```json
 {
-    "topic": "Your newsletter topic or requirements"
+    "topic": {
+        "title": "Newsletter Topic",
+        "type": "string",
+        "description": "Topic or requirements for the newsletter",
+        "editor": "textfield"
+    }
 }
 ```
 
-Example:
+Example input:
 ```json
 {
-    "topic": "I want to know everything about AI agents – current news, AI agentic platforms and frameworks, and companies in this field."
+    "topic": "Latest developments in quantum computing, focusing on breakthroughs, industry news, and practical applications"
 }
 ```
 
-## Output
+## Output Format
 
 The actor outputs a dataset containing:
-- Generated newsletter content in markdown format
-- Topic information
-- Generation status
-- Timestamp
+
+```json
+{
+    "topic": "string",
+    "content": "markdown formatted newsletter content",
+    "status": "success|error",
+    "timestamp": "ISO 8601 datetime"
+}
+```
 
 ## Project Structure
 
 ```
 newsletter-agent/
-├── .actor/
-│   ├── actor.json          # Actor configuration
-│   ├── Dockerfile         # Docker build instructions
-│   └── input_schema.json  # Input schema definition
+├── .actor/                # Actor configuration
+├── docs/                  # Documentation
 ├── src/
-│   ├── agents/
-│   │   ├── researcher.py  # Research agent implementation
-│   │   ├── writer.py      # Content writer agent
-│   │   └── editor.py      # Editor agent
-│   ├── config/
-│   │   └── config.py      # Configuration settings
-│   ├── tools/             # Scraping and processing tools
-│   ├── newsletter_crew.py # Agent coordination
-│   └── main.py           # Entry point
-├── requirements.txt       # Python dependencies
+│   ├── agents/           # AI agent implementations
+│   │   ├── researcher.py # Research agent
+│   │   ├── writer.py     # Content writer
+│   │   └── editor.py     # Editor
+│   ├── config/           # Configuration
+│   ├── tools/            # Apify integration tools
+│   ├── newsletter_crew.py # Agent orchestration
+│   └── main.py          # Entry point
+├── tests/                # Test suite
+├── requirements.txt      # Python dependencies
 └── README.md
 ```
 
-## Customization
-
-You can customize the newsletter sections by modifying the `DEFAULT_NEWSLETTER_SECTIONS` list in `src/config/config.py`.
-
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
