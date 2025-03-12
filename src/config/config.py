@@ -17,7 +17,6 @@ DEFAULT_NEWSLETTER_SECTIONS = [
     "Research & Development",
     "Community Discussions",
     "Video Content",
-    "Podcasts",
 ]
 
 # Agent Configuration
